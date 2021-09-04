@@ -29,8 +29,7 @@ int dice(int number, int size)
   int r;
   int sum = 0;
 
-	assert(size >= 1);
-
+  if (size <= 1) return size;
   for (r = 1; r <= number; r++) sum += ((random() % size)+1);
   return(sum);
 }
