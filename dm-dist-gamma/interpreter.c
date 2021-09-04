@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <crypt.h>
 #include "structs.h"
 #include "comm.h"
 #include "interpreter.h"
@@ -1050,7 +1051,7 @@ void nanny(struct descriptor_data *d, char *arg)
 
 					SEND_TO_Q("Password: ", d);
 
-				STATE(d) = CON_PWDNRM;
+					STATE(d) = CON_PWDNRM;
 				}
 				else
 				{
