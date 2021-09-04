@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
 
@@ -23,7 +24,7 @@ void assume(int faktisk, int antal, int place, char *errmsg)
 		printf("Error has occured at #%d.\n\r", place);
 		printf("Message is : %s\n\r", errmsg);
 		printf("Actual number read is %d\n\r", faktisk);
-		exit();
+		exit(1);
 	}
 }
 
@@ -145,13 +146,13 @@ int main(int argc, char *argv[])
 	if (!(fl_m1 = fopen(argv[1], "r")))
 	{
 		printf("Could not open the builders file.\n\r");
-		exit();
+		exit(1);
 	}
 
 	if (!(fl_m2 = fopen(argv[2], "r")))
 	{
 		printf("Could not open 'old' file.\n\r");
-		exit();
+		exit(1);
 	}
 
 	merge(fl_m1, fl_m2);

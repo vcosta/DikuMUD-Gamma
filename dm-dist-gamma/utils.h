@@ -12,8 +12,8 @@
 #define UPPER(c) (((c)>='a'  && (c) <= 'z') ? ((c)+('A'-'a')) : (c) )
 
 /* Functions in utility.c                     */
-/* #define MAX(a,b) (((a) > (b)) ? (a) : (b)) */
-/* #define MIN(a,b) (((a) < (b)) ? (a) : (b)) */
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#define MIN(a,b) (((a) < (b)) ? (a) : (b))
 
 #define ISNEWL(ch) ((ch) == '\n' || (ch) == '\r') 
 
@@ -201,3 +201,4 @@
 #define IS_GOOD(ch)    (GET_ALIGNMENT(ch) >= 350)
 #define IS_EVIL(ch)    (GET_ALIGNMENT(ch) <= -350)
 #define IS_NEUTRAL(ch) (!IS_GOOD(ch) && !IS_EVIL(ch))
+

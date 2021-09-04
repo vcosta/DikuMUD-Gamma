@@ -95,7 +95,7 @@ void load_messages(void)
 		for (i = 0; (i < MAX_MESSAGES) && (fight_messages[i].a_type!=type) &&
 			(fight_messages[i].a_type); i++);
 		if(i>=MAX_MESSAGES){
-			log("Too many combat messages.");
+			logstr("Too many combat messages.");
 			exit(0);
 		}
 
@@ -171,7 +171,7 @@ void stop_fighting(struct char_data *ch)
 		for (tmp = combat_list; tmp && (tmp->next_fighting != ch); 
 			tmp = tmp->next_fighting);
 		if (!tmp) {
-			log("Char fighting not found Error (fight.c, stop_fighting)");
+			logstr("Char fighting not found Error (fight.c, stop_fighting)");
 			abort();
 		}
 		tmp->next_fighting = ch->next_fighting;
@@ -195,7 +195,7 @@ void make_corpse(struct char_data *ch)
 	char buf[MAX_STRING_LENGTH];
 	int i;
 
-	char *strdup(char *source);
+	char *str_dup(char *source);
 	struct obj_data *create_money( int amount );
 
 	CREATE(corpse, struct obj_data, 1);
@@ -204,15 +204,15 @@ void make_corpse(struct char_data *ch)
 	
 	corpse->item_number = NOWHERE;
 	corpse->in_room = NOWHERE;
-	corpse->name = strdup("corpse");
+	corpse->name = str_dup("corpse");
 
 	sprintf(buf, "Corpse of %s is lying here.", 
 	  (IS_NPC(ch) ? ch->player.short_descr : GET_NAME(ch)));
-	corpse->description = strdup(buf);
+	corpse->description = str_dup(buf);
 
 	sprintf(buf, "Corpse of %s",
 	  (IS_NPC(ch) ? ch->player.short_descr : GET_NAME(ch)));
-	corpse->short_description = strdup(buf);
+	corpse->short_description = str_dup(buf);
 
 	corpse->contains = ch->carrying;
 	if(GET_GOLD(ch)>0)
@@ -661,7 +661,7 @@ void damage(struct char_data *ch, struct char_data *victim,
 				GET_NAME(victim),
 				(IS_NPC(ch) ? ch->player.short_descr : GET_NAME(ch)),
 				world[victim->in_room].name);
-			log(buf);
+			logstr(buf);
 		}
 		die(victim);
 	}
@@ -685,7 +685,7 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
 	extern struct dex_app_type dex_app[];
 
 	if (ch->in_room != victim->in_room) {
-		log("NOT SAME ROOM WHEN FIGHTING!");
+		logstr("NOT SAME ROOM WHEN FIGHTING!");
 		return;
 	}
 

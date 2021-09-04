@@ -23,7 +23,7 @@ int board_remove_msg(struct char_data *ch, char *arg);
 void board_save_board();
 void board_load_board();
 void board_reset_board();
-void error_log();
+void error_logstr();
 void board_fix_long_desc(int num, char *headers[MAX_MSGS]);
 int board_show_board(struct char_data *ch, char *arg);
 
@@ -100,7 +100,7 @@ void board_write_msg(struct char_data *ch, char *arg) {
 	head[msg_num] = (char *)malloc(strlen(arg) + strlen(GET_NAME(ch)) + 4);
 	/* +4 is for a space and '()' around the character name. */
 	if (!head[msg_num]) {
-		error_log("Malloc for board header failed.\n\r");
+		error_logstr("Malloc for board header failed.\n\r");
 		send_to_char("The board is malfunctioning - sorry.\n\r", ch);
 		return;
 	}
@@ -167,12 +167,12 @@ void board_save_board() {
 	FILE *the_file;		
 	int ind, len;
 	if (!msg_num) {
-		error_log("No messages to save.\n\r");
+		error_logstr("No messages to save.\n\r");
 		return;
 	}
 	the_file = fopen(SAVE_FILE, "wb");
 	if (!the_file) {
-		error_log("Unable to open/create savefile..\n\r");
+		error_logstr("Unable to open/create savefile..\n\r");
 		return;
 	}
 	fwrite(&msg_num, sizeof(int), 1, the_file);
@@ -196,13 +196,13 @@ void board_load_board() {
 	board_reset_board();
 	the_file = fopen(SAVE_FILE, "rb");
 	if (!the_file) {
-		error_log("Can't open message file. Board will be empty.\n\r",0);
+		error_logstr("Can't open message file. Board will be empty.\n\r",0);
 		return;
 	}
 	fread(&msg_num, sizeof(int), 1, the_file);
 	
 	if (msg_num < 1 || msg_num > MAX_MSGS || feof(the_file)) {
-		error_log("Board-message file corrupt or nonexistent.\n\r");
+		error_logstr("Board-message file corrupt or nonexistent.\n\r");
 		fclose(the_file);
 		return;
 	}
@@ -210,7 +210,7 @@ void board_load_board() {
 		fread(&len, sizeof(int), 1, the_file);
 		head[ind] = (char *)malloc(len + 1);
 		if (!head[ind]) {
-			error_log("Malloc for board header failed.\n\r");
+			error_logstr("Malloc for board header failed.\n\r");
 			board_reset_board();
 			fclose(the_file);
 			return;
@@ -219,7 +219,7 @@ void board_load_board() {
 		fread(&len, sizeof(int), 1, the_file);
 		msgs[ind] = (char *)malloc(len + 1);
 		if (!msgs[ind]) {
-			error_log("Malloc for board msg failed..\n\r");
+			error_logstr("Malloc for board msg failed..\n\r");
 			board_reset_board();
 			fclose(the_file);
 			return;
@@ -242,7 +242,7 @@ void board_reset_board() {
 	return;
 }
 
-void error_log(char *str) {	/* The original error-handling was MUCH */
+void error_logstr(char *str) {	/* The original error-handling was MUCH */
 	fputs("Board : ", stderr);	/* more competent than the current but  */
 	fputs(str, stderr);	/* I got the advice to cut it out..;)   */
 	return;

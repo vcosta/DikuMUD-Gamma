@@ -6,6 +6,7 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/time.h>
 
 #include "utils.h"
@@ -48,7 +49,7 @@ int checkpointing(void)
 	
 	if (!tics)
 	{
-		log("CHECKPOINT shutdown: tics not updated");
+		logstr("CHECKPOINT shutdown: tics not updated");
 		abort();
 	}
 	else
@@ -60,10 +61,10 @@ int checkpointing(void)
 
 int shutdown_request(void)
 {
-	extern int shutdown;
+	extern int diku_shutdown;
 
-	log("Received USR2 - shutdown request");
-	shutdown = 1;
+	logstr("Received USR2 - diku_shutdown request");
+	diku_shutdown = 1;
 }
 
 
@@ -73,7 +74,7 @@ int hupsig(void)
 {
 	extern int shutdown;
 
-	log("Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
+	logstr("Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
 	exit(0);   /* something more elegant should perhaps be substituted */
 }
 
@@ -81,5 +82,5 @@ int hupsig(void)
 
 int logsig(void)
 {
-	log("Signal received. Ignoring.");
+	logstr("Signal received. Ignoring.");
 }

@@ -2,6 +2,8 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
@@ -31,7 +33,7 @@ main(int argc, char **argv)
 	if (argc != 3)
 	{
 		fputs("Usage: sign (<filename> | - ) <port #>\n", stderr);
-		exit();
+		exit(1);
 	}
 	if (!strcmp(argv[1], "-"))
 	{
@@ -41,7 +43,7 @@ main(int argc, char **argv)
 	else if (!(fl = fopen(argv[1], "r")))
 	{
 		perror(argv[1]);
-		exit();
+		exit(1);
 	}
 	for (;;)
 	{
@@ -52,14 +54,14 @@ main(int argc, char **argv)
 		if (strlen(buf) + strlen(txt) > 2048)
 		{
 			fputs("String too long\n", stderr);
-			exit();
+			exit(1);
 		}
 		strcat(txt, buf);
 	}
 	if ((port = atoi(argv[2])) <= 1024)
 	{
 		fputs("Illegal port #\n", stderr);
-		exit();
+		exit(1);
 	}
 	watch(port, txt);
 }
@@ -81,7 +83,7 @@ void watch(int port, char *text)
 		if (select(64, &input_set, 0, 0, 0) < 0)
 		{
 			perror("select");
-			exit();
+			exit(1);
 		}
 		if (FD_ISSET(mother, &input_set))
 			wave(mother, text);
@@ -130,7 +132,7 @@ int new_connection(int s)
 	{
 		*(peer.sa_data + 49) = '\0';
 		sprintf(buf, "New connection from addr %s\n", peer.sa_data);
-		log(buf);
+		logstr(buf);
 	}
 
 	*/
@@ -158,7 +160,7 @@ int init_socket(int port)
 	if (hp == NULL)
 	{
 		perror("gethostbyname");
-		exit();
+		exit(1);
 	}
 	sa.sin_family = hp->h_addrtype;
 	sa.sin_port	= htons(port);
@@ -166,13 +168,13 @@ int init_socket(int port)
 	if (s < 0) 
 	{
 		perror("Init-socket");
-		exit();
+		exit(1);
  	}
 	if (setsockopt (s, SOL_SOCKET, SO_REUSEADDR,
 		(char *) &opt, sizeof (opt)) < 0) 
 	{
 		perror ("setsockopt REUSEADDR");
-		exit ();
+		exit (1);
 	}
 
 	ld.l_onoff = 1;
@@ -180,13 +182,13 @@ int init_socket(int port)
 	if (setsockopt(s, SOL_SOCKET, SO_LINGER, &ld, sizeof(ld)) < 0)
 	{
 		perror("setsockopt LINGER");
-		exit();
+		exit(1);
 	}
-	if (bind(s, &sa, sizeof(sa), 0) < 0)
+	if (bind(s, &sa, sizeof(sa)) < 0)
 	{
 		perror("bind");
 		close(s);
-		exit();
+		exit(1);
 	}
 	listen(s, 5);
 	return(s);
@@ -225,6 +227,6 @@ void nonblock(int s)
 	if (fcntl(s, F_SETFL, FNDELAY) == -1)
 	{
 		perror("Noblock");
-		exit();
+		exit(1);
 	}
 }

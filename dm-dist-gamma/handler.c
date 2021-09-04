@@ -190,7 +190,7 @@ void affect_modify(struct char_data *ch, byte loc, byte mod, long bitv, bool add
 			break;
 
 		default:
-			log("Unknown apply adjust attempt (handler.c, affect_modify).");
+			logstr("Unknown apply adjust attempt (handler.c, affect_modify).");
 			break;
 
 	} /* switch */
@@ -296,7 +296,7 @@ void affect_remove( struct char_data *ch, struct affected_type *af )
 		for(hjp = ch->affected; (hjp->next) && (hjp->next != af); hjp = hjp->next);
 
 		if (hjp->next != af) {
-			log("FATAL : Could not locate affected_type in ch->affected. (handler.c, affect_remove)");
+			logstr("FATAL : Could not locate affected_type in ch->affected. (handler.c, affect_remove)");
 			exit(1);
 		}
 		hjp->next = af->next; /* skip the af element */
@@ -369,7 +369,7 @@ void char_from_room(struct char_data *ch)
 	struct char_data *i;
 
 	if (ch->in_room == NOWHERE) {
-		log("NOWHERE extracting char from room (handler.c, char_from_room)");
+		logstr("NOWHERE extracting char from room (handler.c, char_from_room)");
 		exit(1);
 	}
 
@@ -485,12 +485,12 @@ void equip_char(struct char_data *ch, struct obj_data *obj, int pos)
 	assert(!(ch->equipment[pos]));
 
 	if (obj->carried_by) {
-		log("EQUIP: Obj is carried_by when equip.");
+		logstr("EQUIP: Obj is carried_by when equip.");
 		return;
 	}
 
 	if (obj->in_room!=NOWHERE) {
-		log("EQUIP: Obj is in_room when equip.");
+		logstr("EQUIP: Obj is in_room when equip.");
 		return;
 	}
 
@@ -504,7 +504,7 @@ void equip_char(struct char_data *ch, struct obj_data *obj, int pos)
 			obj_to_room(obj, ch->in_room);
 			return;
 		} else {
-			log("ch->in_room = NOWHERE when equipping char.");
+			logstr("ch->in_room = NOWHERE when equipping char.");
 		}
 	}
 
@@ -916,7 +916,7 @@ void extract_char(struct char_data *ch)
 	}
 
 	if (ch->in_room == NOWHERE) {
-		log("NOWHERE extracting char. (handler.c, extract_char)");
+		logstr("NOWHERE extracting char. (handler.c, extract_char)");
 		exit(1);
 	}
 
@@ -994,7 +994,7 @@ void extract_char(struct char_data *ch)
 		if(k)
 			k->next = ch->next;
 		else {
-			log("Trying to remove ?? from character_list. (handler.c, extract_char)");
+			logstr("Trying to remove ?? from character_list. (handler.c, extract_char)");
 			abort();
 		}
 	}
@@ -1154,11 +1154,11 @@ struct obj_data *create_money( int amount )
 	struct extra_descr_data *new_descr;
 	char buf[80];
 
-	char *strdup(char *str);
+	char *str_dup(char *str);
 
 	if(amount<=0)
 	{
-		log("ERROR: Try to create negative money.");
+		logstr("ERROR: Try to create negative money.");
 		exit(1);
 	}
 
@@ -1168,38 +1168,38 @@ struct obj_data *create_money( int amount )
 
 	if(amount==1)
 	{
-		obj->name = strdup("coin gold");
-		obj->short_description = strdup("a gold coin");
-		obj->description = strdup("One miserable gold coin.");
+		obj->name = str_dup("coin gold");
+		obj->short_description = str_dup("a gold coin");
+		obj->description = str_dup("One miserable gold coin.");
 
-		new_descr->keyword = strdup("coin gold");
-		new_descr->description = strdup("One miserable gold coin.");
+		new_descr->keyword = str_dup("coin gold");
+		new_descr->description = str_dup("One miserable gold coin.");
 	}
 	else
 	{
-		obj->name = strdup("coins gold");
-		obj->short_description = strdup("gold coins");
-		obj->description = strdup("A pile of gold coins.");
+		obj->name = str_dup("coins gold");
+		obj->short_description = str_dup("gold coins");
+		obj->description = str_dup("A pile of gold coins.");
 
-		new_descr->keyword = strdup("coins gold");
+		new_descr->keyword = str_dup("coins gold");
 		if(amount<10) {
 			sprintf(buf,"There is %d coins.",amount);
-			new_descr->description = strdup(buf);
+			new_descr->description = str_dup(buf);
 		} 
 		else if (amount<100) {
 			sprintf(buf,"There is about %d coins",10*(amount/10));
-			new_descr->description = strdup(buf);
+			new_descr->description = str_dup(buf);
 		}
 		else if (amount<1000) {
 			sprintf(buf,"It looks like something round %d coins",100*(amount/100));
-			new_descr->description = strdup(buf);
+			new_descr->description = str_dup(buf);
 		}
 		else if (amount<100000) {
 			sprintf(buf,"You guess there is %d coins",1000*((amount/1000)+ number(0,(amount/1000))));
-			new_descr->description = strdup(buf);
+			new_descr->description = str_dup(buf);
 		}
 		else 
-			new_descr->description = strdup("There is A LOT of coins");			
+			new_descr->description = str_dup("There is A LOT of coins");			
 	}
 
 	new_descr->next = 0;

@@ -48,7 +48,7 @@ void weight_change_object(struct obj_data *obj, int weight)
 		GET_OBJ_WEIGHT(obj) += weight;
 		obj_to_obj(obj, tmp_obj);
 	} else {
-		log("Unknown attempt to subtract weight from an object.");
+		logstr("Unknown attempt to subtract weight from an object.");
 	}
 }
 
@@ -62,7 +62,7 @@ void name_from_drinkcon(struct obj_data *obj)
 	for(i=0; (*((obj->name)+i)!=' ') && (*((obj->name)+i)!='\0'); i++)  ;
 
 	if (*((obj->name)+i)==' ') {
-		new_name=strdup((obj->name)+i+1);
+		new_name=str_dup((obj->name)+i+1);
 		free(obj->name);
 		obj->name=new_name;
 	}
@@ -823,7 +823,7 @@ void wear(struct char_data *ch, struct obj_data *obj_object, int keyword)
 			send_to_char(buffer, ch);
 		} break;
 		default: {
-			log("Unknown type called in wear.");
+			logstr("Unknown type called in wear.");
 		} break;
 	}
 }
