@@ -86,7 +86,7 @@ void zone_update(void);
 void affect_update( void ); /* In spells.c */
 void point_update( void );  /* In limits.c */
 void free_char(struct char_data *ch);
-void logstr(char *str);
+void slog(char *str);
 void mobile_activity(void);
 void string_add(struct descriptor_data *d, char *str);
 void perform_violence(void);
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 		{
 			case 'l':
 				lawful = 1;
-				logstr("Lawful mode selected.");
+				slog("Lawful mode selected.");
 			break;
 			case 'd':
 				if (*(argv[pos] + 2))
@@ -128,18 +128,18 @@ int main(int argc, char **argv)
 					dir = argv[pos];
 				else
 				{
-					logstr("Directory arg expected after option -d.");
+					slog("Directory arg expected after option -d.");
 					exit(0);
 				}
 			break;
 			case 's':
 				no_specials = 1;
-				logstr("Suppressing assignment of special routines.");
+				slog("Suppressing assignment of special routines.");
 			break;
 			default:
 				sprintf(buf, "Unknown option -% in argument string.",
 					*(argv[pos] + 1));
-				logstr(buf);
+				slog(buf);
 			break;
 		}
 		pos++;
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 		}
 
 	sprintf(buf, "Running game on port %d.", port);
-	logstr(buf);
+	slog(buf);
 
 	if (chdir(dir) < 0)
 	{
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
 	}
 
 	sprintf(buf, "Using %s as data directory.", dir);
-	logstr(buf);
+	slog(buf);
 
 	srandom(time(0));
 	run_the_game(port);
@@ -196,21 +196,21 @@ int run_the_game(int port)
 
 	descriptor_list = NULL;
 
-	logstr("Signal trapping.");
+	slog("Signal trapping.");
 	signal_setup();
 
-	logstr("Opening mother connection.");
+	slog("Opening mother connection.");
 	s = init_socket(port);
 
 	if (lawful && load() >= 6)
 	{
-		logstr("System load too high at startup.");
+		slog("System load too high at startup.");
 		coma(s);
 	}
 
 	boot_db();
 
-	logstr("Entering game loop.");
+	slog("Entering game loop.");
 
 	game_loop(s);
 
@@ -220,11 +220,11 @@ int run_the_game(int port)
 
 	if (reboot)
 	{
-		logstr("Rebooting.");
+		slog("Rebooting.");
 		exit(52);            /* what's so great about HHGTTG, anyhow? */
 	}
 
-	logstr("Normal termination of game.");
+	slog("Normal termination of game.");
 }
 
 
@@ -625,7 +625,7 @@ int new_connection(int s)
 	{
 		*(peer.sa_data + 49) = '\0';
 		sprintf(buf, "New connection from addr %s.\n", peer.sa_data);
-		logstr(buf);
+		slog(buf);
 	}
 
 	*/
@@ -796,7 +796,7 @@ int process_input(struct descriptor_data *t)
 					break;
 			else
 			{
-				logstr("EOF encountered on socket read.");
+				slog("EOF encountered on socket read.");
 				return(-1);
 			}
 	}
@@ -881,7 +881,7 @@ int process_input(struct descriptor_data *t)
 
 void close_sockets(int s)
 {
-	logstr("Closing all sockets.");
+	slog("Closing all sockets.");
 
 	while (descriptor_list)
 		close_socket(descriptor_list);
@@ -920,18 +920,18 @@ void close_socket(struct descriptor_data *d)
 			save_char(d->character, NOWHERE);
 			act("$n has lost $s link.", TRUE, d->character, 0, 0, TO_ROOM);
 			sprintf(buf, "Closing link to: %s.", GET_NAME(d->character));
-			logstr(buf);
+			slog(buf);
 			d->character->desc = 0;
 		}
 		else
 		{
 			sprintf(buf, "Losing player: %s.", GET_NAME(d->character));
-			logstr(buf);
+			slog(buf);
 
 			free_char(d->character);
 		}
 	else
-		logstr("Losing descriptor without char.");
+		slog("Losing descriptor without char.");
 		
 
 	if (next_to_process == d)		/* to avoid crashing the process loop */
@@ -992,7 +992,7 @@ void coma(int s)
 	int workhours(void);
 	int load(void);
 
-	logstr("Entering comatose state.");
+	slog("Entering comatose state.");
 
 	sigsetmask(sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
 		sigmask(SIGPIPE) | sigmask(SIGALRM) | sigmask(SIGTERM) |
@@ -1015,7 +1015,7 @@ void coma(int s)
 		{
 			if (load() < 6)
 			{
-				logstr("Leaving coma with visitor.");
+				slog("Leaving coma with visitor.");
 				sigsetmask(0);
 				return;
 			}
@@ -1030,13 +1030,13 @@ void coma(int s)
 		tics = 1;
 		if (workhours())
 		{
-			logstr("Working hours collision during coma. Exit.");
+			slog("Working hours collision during coma. Exit.");
 			exit(0);
 		}
 	}
 	while (load() >= 6);
 
-	logstr("Leaving coma.");
+	slog("Leaving coma.");
 	sigsetmask(0);
 }
 
@@ -1180,8 +1180,8 @@ void act(char *str, int hide_invisible, struct char_data *ch,
 						case 'F': i = fname((char *) vict_obj); break;
 						case '$': i = "$"; break;
 						default:
-							logstr("Illegal $-code to act():");
-							logstr(str);
+							slog("Illegal $-code to act():");
+							slog(str);
 							break;
 					}
 					while (*point = *(i++))

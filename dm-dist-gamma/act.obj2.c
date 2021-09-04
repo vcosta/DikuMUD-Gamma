@@ -48,7 +48,7 @@ void weight_change_object(struct obj_data *obj, int weight)
 		GET_OBJ_WEIGHT(obj) += weight;
 		obj_to_obj(obj, tmp_obj);
 	} else {
-		logstr("Unknown attempt to subtract weight from an object.");
+		slog("Unknown attempt to subtract weight from an object.");
 	}
 }
 
@@ -823,7 +823,7 @@ void wear(struct char_data *ch, struct obj_data *obj_object, int keyword)
 			send_to_char(buffer, ch);
 		} break;
 		default: {
-			logstr("Unknown type called in wear.");
+			slog("Unknown type called in wear.");
 		} break;
 	}
 }

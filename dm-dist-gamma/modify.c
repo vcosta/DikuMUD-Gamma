@@ -689,7 +689,7 @@ void night_watchman(void)
 		(t_info->tm_wday < 6))
 		if (t_info->tm_min > 50)
 		{
-			logstr("Leaving the scene for the serious folks.");
+			slog("Leaving the scene for the serious folks.");
 			send_to_all("Closing down. Thank you for flying DikuMUD.\n\r");
 			diku_shutdown = 1;
 		}
@@ -717,14 +717,14 @@ void check_reboot(void)
 		{
 			if (t_info->tm_min > 50)
 			{
-				logstr("Reboot exists.");
+				slog("Reboot exists.");
 				fread(&dummy, sizeof(dummy), 1, boot);
 				if (!feof(boot))   /* the file is nonepty */
 				{
-					logstr("Reboot is nonempty.");
+					slog("Reboot is nonempty.");
 					if (system("./reboot"))
 					{
-						logstr("Reboot script terminated abnormally");
+						slog("Reboot script terminated abnormally");
 						send_to_all("The reboot was cancelled.\n\r");
 						system("mv ./reboot reboot.FAILED");
 						fclose(boot);
@@ -839,7 +839,7 @@ char *nogames(void)
 
 	if (fl = fopen("lib/nogames", "r"))
 	{
-		logstr("/usr/games/nogames exists");
+		slog("/usr/games/nogames exists");
 		fgets(text,200,fl);
 		return(text);
 		fclose(fl);
@@ -858,7 +858,7 @@ void coma(void)
 
 	void close_socket(struct descriptor_data *d);
 
-	logstr("Entering comatose state");
+	slog("Entering comatose state");
 
 	while (descriptor_list)
 		close_socket(descriptor_list);
@@ -869,13 +869,13 @@ void coma(void)
 		tics = 1;
 		if (workhours())
 		{
-			logstr("Working hours collision during coma. Exit.");
+			slog("Working hours collision during coma. Exit.");
 			exit(0);
 		}
 	}
 	while (load() >= 6);
 
-	logstr("Leaving coma");
+	slog("Leaving coma");
 }
 
 #endif

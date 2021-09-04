@@ -835,14 +835,14 @@ void do_shutdown(struct char_data *ch, char *argument, int cmd)
 	{
 		sprintf(buf, "Shutdown by %s.", GET_NAME(ch) );
 		send_to_all(buf);
-		logstr(buf);
+		slog(buf);
 		diku_shutdown = 1;
 	}
 	else if (!str_cmp(arg, "reboot"))
 	{
 		sprintf(buf, "Reboot by %s.", GET_NAME(ch));
 		send_to_all(buf);
-		logstr(buf);
+		slog(buf);
 		diku_shutdown = reboot = 1;
 	}
 	else

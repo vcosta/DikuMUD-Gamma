@@ -132,7 +132,7 @@ int new_connection(int s)
 	{
 		*(peer.sa_data + 49) = '\0';
 		sprintf(buf, "New connection from addr %s\n", peer.sa_data);
-		logstr(buf);
+		slog(buf);
 	}
 
 	*/
